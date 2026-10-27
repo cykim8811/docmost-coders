@@ -1,3 +1,4 @@
+import { isCoders } from "@/lib/coders";
 import {
   IconBlockquote,
   IconCaretRightFilled,
@@ -555,7 +556,14 @@ const CommandGroups: SlashMenuGroupedItemsType = {
     {
       title: "Emoji",
       description: "Insert emoji.",
-      searchTerms: ["emoji", "icon", "smiley", "emoticon", "symbol", "reaction"],
+      searchTerms: [
+        "emoji",
+        "icon",
+        "smiley",
+        "emoticon",
+        "symbol",
+        "reaction",
+      ],
       icon: IconMoodSmile,
       command: ({ editor, range }: CommandProps) => {
         editor.chain().focus().deleteRange(range).insertContent(":").run();
@@ -832,6 +840,15 @@ export const getSuggestionItems = ({
 
   for (const [group, items] of Object.entries(CommandGroups)) {
     const filteredItems = items.filter((item) => {
+      if (
+        isCoders() &&
+        [
+          "Mermaid diagram",
+          "Draw.io (diagrams.net)",
+          "Excalidraw (Whiteboard)",
+        ].includes(item.title)
+      )
+        return false;
       if (excludeItems?.has(item.title)) return false;
       if (editor && item.disable?.(editor)) return false;
       const translatedTitle = i18n.t(item.title);

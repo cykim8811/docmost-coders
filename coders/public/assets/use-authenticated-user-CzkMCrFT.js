@@ -1,0 +1,1 @@
+import{t as e}from"./useQuery-TP8wEMJj.js";import{t}from"./user-service-Csr-FfeE.js";function n(n=!0){return e({queryKey:[`currentUser`],queryFn:t,retry:!1,staleTime:3e5,enabled:n})}export{n as t};

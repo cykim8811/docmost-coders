@@ -1,1 +1,0 @@
-var e=function(e){return e.Read=`read`,e.Edit=`edit`,e}({});export{e as t};

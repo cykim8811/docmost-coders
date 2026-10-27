@@ -120,3 +120,9 @@ SDK 브라우저 검증에는 `TEST_SDK_SOURCE`로 로컬 Core SDK 파일을 읽
 제공해야 합니다. 서비스에 저장한 비공개 문서·첨부파일은 이 공개 소스에 포함하지 않습니다.
 
 명세 기준: https://docs.coders.kr/guide.md (2026-10-28 확인).
+
+Core 기본 정적 프론트 제한(256파일, 10MiB)에 맞추기 위해 Coders 빌드는
+Excalidraw/Draw.io 편집과 Mermaid 미리보기를 제공하지 않습니다. 기존 노드의
+저장 데이터는 유지하며 Mermaid는 코드로 표시합니다. 일반 Docmost 빌드는
+이 제한을 적용하지 않습니다. `scripts/coders/check-community.cjs`가 배포 파일
+수·크기와 Core 허용 HTTP 메서드를 검사합니다.

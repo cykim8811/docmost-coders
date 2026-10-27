@@ -54,9 +54,27 @@ export default defineConfig(({ mode }) => {
       },
     },
     resolve: {
-      alias: {
-        "@": "/src",
-      },
+      alias: [
+        ...(process.env.VITE_CODERS === "true"
+          ? [
+              {
+                find: /.*excalidraw-view-lazy(?:\.tsx)?$/,
+                replacement: path.resolve(
+                  "src/community/diagram-placeholder.tsx",
+                ),
+              },
+              {
+                find: /.*excalidraw-menu-lazy(?:\.tsx)?$/,
+                replacement: path.resolve("src/community/empty-view.tsx"),
+              },
+              {
+                find: /.*code-block\/mermaid-view\.tsx$/,
+                replacement: path.resolve("src/community/empty-view.tsx"),
+              },
+            ]
+          : []),
+        { find: "@", replacement: "/src" },
+      ],
     },
     server: {
       proxy: {

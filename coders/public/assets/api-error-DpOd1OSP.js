@@ -1,0 +1,1 @@
+import{mn as e}from"./api-client-DKh-q6fo.js";function t(t,n=`An error occurred`){if(e(t)){let e=t.response?.data?.message;if(Array.isArray(e)){let t=e.filter(Boolean).join(`, `);if(t)return t}else if(typeof e==`string`&&e.trim())return e}return n}export{t};

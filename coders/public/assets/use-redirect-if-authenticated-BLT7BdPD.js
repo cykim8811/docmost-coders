@@ -1,1 +1,0 @@
-import{i as e}from"./rolldown-runtime-COiEfhsA.js";import{En as t}from"./vendor-mantine-Dnu_Ima9.js";import{l as n}from"./chunk-62JRHF6Z-BEkpZGk9.js";import{pn as r}from"./api-client-CgvATas_.js";import{cr as i}from"./index-Dxdi7oJe.js";var a=e(t());function o(){let{data:e,isLoading:t}=i(),o=n();(0,a.useEffect)(()=>{e&&e?.user&&o(r())},[t,e])}export{o as t};

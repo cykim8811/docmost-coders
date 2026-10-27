@@ -1,3 +1,4 @@
+import { isCoders } from "@/lib/coders";
 import { NodeViewContent, NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import { ActionIcon, Group, Select, Tooltip } from "@mantine/core";
 import { CopyButton } from "@/components/common/copy-button";
@@ -86,6 +87,7 @@ export default function CodeBlockView(props: NodeViewProps) {
       <pre
         spellCheck="false"
         hidden={
+          !isCoders() &&
           ((language === "mermaid" && !editor.isEditable) ||
             (language === "mermaid" && !isSelected)) &&
           node.textContent.length > 0

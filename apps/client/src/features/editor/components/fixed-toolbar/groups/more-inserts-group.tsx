@@ -1,3 +1,4 @@
+import { isCoders } from "@/lib/coders";
 import { FC } from "react";
 import type { Editor } from "@tiptap/react";
 import { ActionIcon, Badge, Menu, Tooltip } from "@mantine/core";
@@ -156,7 +157,8 @@ export const MoreInsertsGroup: FC<Props> = ({ editor, templateMode }) => {
                 )
               }
               onClick={() => {
-                if (hasBases) insertBaseEmbedBlock(editor, { template: "kanban" });
+                if (hasBases)
+                  insertBaseEmbedBlock(editor, { template: "kanban" });
               }}
             >
               {t("Kanban")}
@@ -165,38 +167,42 @@ export const MoreInsertsGroup: FC<Props> = ({ editor, templateMode }) => {
         )}
 
         <Menu.Divider />
-        <Menu.Label>{t("Diagrams")}</Menu.Label>
-        <Menu.Item
-          leftSection={<IconMermaid size={16} />}
-          onClick={() =>
-            editor
-              .chain()
-              .focus()
-              .setCodeBlock({ language: "mermaid" })
-              .insertContent("flowchart LR\n    A --> B")
-              .run()
-          }
-        >
-          {t("Mermaid diagram")}
-        </Menu.Item>
-        {!templateMode && (
-          <Menu.Item
-            leftSection={<IconDrawio size={16} />}
-            onClick={() => editor.chain().focus().setDrawio().run()}
-          >
-            Draw.io
-          </Menu.Item>
-        )}
-        {!templateMode && (
-          <Menu.Item
-            leftSection={<IconExcalidraw size={16} />}
-            onClick={() => editor.chain().focus().setExcalidraw().run()}
-          >
-            Excalidraw
-          </Menu.Item>
-        )}
+        {!isCoders() && (
+          <>
+            <Menu.Label>{t("Diagrams")}</Menu.Label>
+            <Menu.Item
+              leftSection={<IconMermaid size={16} />}
+              onClick={() =>
+                editor
+                  .chain()
+                  .focus()
+                  .setCodeBlock({ language: "mermaid" })
+                  .insertContent("flowchart LR\n    A --> B")
+                  .run()
+              }
+            >
+              {t("Mermaid diagram")}
+            </Menu.Item>
+            {!templateMode && (
+              <Menu.Item
+                leftSection={<IconDrawio size={16} />}
+                onClick={() => editor.chain().focus().setDrawio().run()}
+              >
+                Draw.io
+              </Menu.Item>
+            )}
+            {!templateMode && (
+              <Menu.Item
+                leftSection={<IconExcalidraw size={16} />}
+                onClick={() => editor.chain().focus().setExcalidraw().run()}
+              >
+                Excalidraw
+              </Menu.Item>
+            )}
 
-        <Menu.Divider />
+            <Menu.Divider />
+          </>
+        )}
         <Menu.Label>{t("Embeds")}</Menu.Label>
         <Menu.Item
           leftSection={<IconAppWindow size={16} />}
@@ -216,7 +222,10 @@ export const MoreInsertsGroup: FC<Props> = ({ editor, templateMode }) => {
         >
           Vimeo
         </Menu.Item>
-        <Menu.Item leftSection={<LoomIcon size={16} />} onClick={() => setEmbed("loom")}>
+        <Menu.Item
+          leftSection={<LoomIcon size={16} />}
+          onClick={() => setEmbed("loom")}
+        >
           Loom
         </Menu.Item>
         <Menu.Item
@@ -237,7 +246,10 @@ export const MoreInsertsGroup: FC<Props> = ({ editor, templateMode }) => {
         >
           Typeform
         </Menu.Item>
-        <Menu.Item leftSection={<MiroIcon size={16} />} onClick={() => setEmbed("miro")}>
+        <Menu.Item
+          leftSection={<MiroIcon size={16} />}
+          onClick={() => setEmbed("miro")}
+        >
           Miro
         </Menu.Item>
         <Menu.Item

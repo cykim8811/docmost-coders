@@ -29,6 +29,8 @@
   이미지 비압축 크기 약 169 MiB, UID/GID 65534, 읽기 전용 루트,
   `/tmp` 64 MiB, 추가 볼륨 없음.
 - Enterprise 소스 디렉토리·프론트 import 부재 검사.
+- 실제 Core `Manifest` 모델로 `coders.json` 검증 통과. 정적 프론트는
+  189파일·7,170,391바이트로 기본 256파일·10MiB 제한 이내입니다.
 
 Node.js 26의 전역 Web Storage와 jsdom 테스트 환경 충돌을 피하기 위해
 프론트 테스트에 `NODE_OPTIONS=--no-experimental-webstorage`를 사용했습니다.
@@ -42,7 +44,7 @@ Node.js 26의 전역 Web Storage와 jsdom 테스트 환경 충돌을 피하기 �
 ## 아직 별도로 확인해야 하는 운영 조건
 
 최초 GitHub-hosted 빌드·GHCR 공개 이미지·provenance 게시를 확인했습니다.
-최종 SDK 변경 커밋의 CI와 실제 Coders PostgreSQL의 확장/DDL 권한, Redis ACL, 엔드포인트 중계,
+실제 Coders PostgreSQL의 확장/DDL 권한, Redis ACL, 엔드포인트 중계,
 300초 연결 회전, 플랫폼의 메시지·본문·메모리·동시 연결 한도는
 실제 Coders 리소스에서 최종 확인해야 합니다.
 

@@ -1,1 +1,0 @@
-import{wn as e}from"./vendor-mantine-Dnu_Ima9.js";import{r as t}from"./chunk-62JRHF6Z-BEkpZGk9.js";var n=e(),r=()=>(0,n.jsxs)(`main`,{style:{padding:32},children:[(0,n.jsx)(`p`,{children:`이 기능은 Coders 커뮤니티 버전에서 제공하지 않습니다.`}),(0,n.jsx)(t,{to:`/home`,children:`문서로 돌아가기`})]}),i=r,a=r;export{i as MfaChallengePage,a as MfaSetupRequiredPage,r as default};

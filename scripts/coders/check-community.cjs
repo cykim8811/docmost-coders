@@ -31,3 +31,22 @@ assert.ok(
   "Build and commit the static frontend before publishing",
 );
 console.log("PASS community-only source tree and Coders manifest");
+const allowedMethods = new Set(["GET", "POST", "PUT", "PATCH", "DELETE"]);
+for (const endpoint of Object.values(manifest.endpoints)) {
+  assert.ok(endpoint.methods.length <= 5);
+  assert.ok(endpoint.methods.every((method) => allowedMethods.has(method)));
+}
+let files = 0;
+let bytes = 0;
+function measure(dir) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const file = path.join(dir, entry.name);
+    assert.ok(!entry.isSymbolicLink(), `Static symlink is forbidden: ${file}`);
+    if (entry.isDirectory()) measure(file);
+    else { files++; bytes += fs.statSync(file).size; }
+  }
+}
+measure(manifest.frontend.directory);
+assert.ok(files <= 256, `Core frontend file limit exceeded: ${files}/256`);
+assert.ok(bytes <= 10_485_760, `Core frontend size limit exceeded: ${bytes}/10485760`);
+console.log(`PASS Core frontend limits: ${files} files, ${bytes} bytes`);
