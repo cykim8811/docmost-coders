@@ -1,4 +1,4 @@
-import { IAuthProvider } from "@/ee/security/types/security.types.ts";
+import { IAuthProvider } from "@/community/edition";
 
 export interface IWorkspace {
   id: string;

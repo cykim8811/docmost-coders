@@ -4,13 +4,14 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { Logger, NotFoundException, ValidationPipe } from '@nestjs/common';
+import { ForbiddenException, Logger, NotFoundException, ValidationPipe } from '@nestjs/common';
 import { Logger as PinoLogger } from 'nestjs-pino';
 import { TransformHttpResponseInterceptor } from './common/interceptors/http-response.interceptor';
 import { WsRedisIoAdapter } from './ws/adapter/ws-redis.adapter';
 import fastifyMultipart from '@fastify/multipart';
 import fastifyCookie from '@fastify/cookie';
 import { InternalLogFilter } from './common/logger/internal-log-filter';
+import { rewriteCodersUrl } from './integrations/coders/routing';
 import { EnvironmentService } from './integrations/environment/environment.service';
 import {
   overrideRequestIp,
@@ -24,6 +25,7 @@ const OAUTH_CALLBACK_PATH =
 
 async function bootstrap() {
   const adapter = new FastifyAdapter({
+    rewriteUrl: rewriteCodersUrl,
     trustProxy: true,
     routerOptions: {
       maxParamLength: 1000,
@@ -123,6 +125,13 @@ async function bootstrap() {
       this.send('');
     })
     .addHook('preHandler', function (req, reply, done) {
+      if (process.env.CODERS_MODE === 'true') {
+        const route = req.routeOptions.url || '';
+        if ((route.startsWith('/api/auth/') && route !== '/api/auth/collab-token') ||
+            route.startsWith('/api/workspace/invites') || route === '/api/workspace/create') {
+          throw new ForbiddenException('Manage sign-in and membership through Coders');
+        }
+      }
       // don't require workspaceId for the following paths
       const excludedPaths = [
         '/api/auth/setup',

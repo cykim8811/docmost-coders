@@ -48,8 +48,8 @@ export class CollaborationGateway {
     this.withRedis = !this.environmentService.isCollabDisableRedis();
 
     this.hocuspocus = new Hocuspocus({
-      debounce: 10000,
-      maxDebounce: 45000,
+      debounce: process.env.CODERS_MODE === 'true' ? 500 : 10000,
+      maxDebounce: process.env.CODERS_MODE === 'true' ? 2000 : 45000,
       unloadImmediately: false,
       extensions: [
         this.authenticationExtension,
@@ -89,6 +89,11 @@ export class CollaborationGateway {
       method: request.method ?? 'GET',
       url: request.url ?? '/',
       headers: {
+        ...(process.env.CODERS_MODE === 'true' ? {
+          'coders-user-id': request.headers['coders-user-id'],
+          'coders-resource-id': request.headers['coders-resource-id'],
+          'coders-resource-role': request.headers['coders-resource-role'],
+        } : {}),
         'sec-websocket-key': request.headers['sec-websocket-key'] ?? '',
         'sec-websocket-protocol':
           request.headers['sec-websocket-protocol'] ?? '',
@@ -143,18 +148,19 @@ export class CollaborationGateway {
     return this.hocuspocus.getDocumentsCount();
   }
 
-  handleYjsEvent<TName extends keyof CollabEventHandlers>(
+  async handleYjsEvent<TName extends keyof CollabEventHandlers>(
     eventName: TName,
     documentName: string,
     payload: Parameters<CollabEventHandlers[TName]>[1],
     onlyIfOpen = false,
-  ) {
-    return this.redisSync?.handleEvent(
-      eventName,
-      documentName,
-      payload,
-      onlyIfOpen,
-    );
+  ): Promise<Awaited<ReturnType<CollabEventHandlers[TName]>>> {
+    if (this.redisSync) return await this.redisSync.handleEvent(eventName, documentName, payload, onlyIfOpen) as Awaited<ReturnType<CollabEventHandlers[TName]>>;
+    if (onlyIfOpen && !this.hocuspocus.documents.has(documentName)) return;
+    // Core runs one server per resource; REST edits and comments still need to
+    // reach the local Yjs document when cross-instance Redis sync is disabled.
+    const handler = this.collabEventsService.getHandlers(this.hocuspocus)[eventName] as
+      (name: string, data: unknown) => ReturnType<CollabEventHandlers[TName]>;
+    return await handler(documentName, payload);
   }
 
   openDirectConnection(documentName: string, context?: any) {

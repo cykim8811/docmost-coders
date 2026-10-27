@@ -21,10 +21,11 @@ import {
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { getSpaceUrl } from "@/lib/config.ts";
-import { useHasFeature } from "@/ee/hooks/use-feature";
-import { Feature } from "@/ee/features";
-import { usePersonalSpaceQuery } from "@/ee/personal-space/queries/personal-space-query";
-import CreatePersonalSpaceModal from "@/ee/personal-space/components/create-personal-space-modal";
+import { isCoders } from '@/lib/coders';
+import { useHasFeature } from "@/community/edition";
+import { Feature } from "@/community/features";
+import { usePersonalSpaceQuery } from "@/community/edition";
+import { UnavailableFeature as CreatePersonalSpaceModal } from "@/community/edition";
 import { useAtom } from "jotai";
 import { currentUserAtom } from "@/features/user/atoms/current-user-atom.ts";
 import { Link } from "react-router-dom";
@@ -191,9 +192,9 @@ export default function TopMenu() {
 
         <Menu.Divider />
 
-        <Menu.Item onClick={logout} leftSection={<IconLogout size={16} />}>
+        {!isCoders() && <Menu.Item onClick={logout} leftSection={<IconLogout size={16} />}>
           {t("Logout")}
-        </Menu.Item>
+        </Menu.Item>}
       </Menu.Dropdown>
     </Menu>
 

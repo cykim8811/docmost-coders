@@ -5,6 +5,7 @@ import { Indicator, Text, Tooltip } from "@mantine/core";
 import React from "react";
 import semverGt from "semver/functions/gt";
 import { useTranslation } from "react-i18next";
+import { SourceLink } from '@/community/source-link';
 
 export default function AppVersion() {
   const { t } = useTranslation();
@@ -54,6 +55,7 @@ export default function AppVersion() {
           </Text>
         </Indicator>
       </Tooltip>
+      <SourceLink />
     </div>
   );
 }

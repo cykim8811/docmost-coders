@@ -6,6 +6,7 @@ import { userRoleData } from "@/features/workspace/types/user-role-data.ts";
 import { useCreateInvitationMutation } from "@/features/workspace/queries/workspace-query.ts";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { isCoders } from '@/lib/coders';
 
 interface Props {
   onClose: () => void;
@@ -17,6 +18,8 @@ export function WorkspaceInviteForm({ onClose }: Props) {
   const [groupIds, setGroupIds] = useState<string[]>([]);
   const createInvitationMutation = useCreateInvitationMutation();
   const navigate = useNavigate();
+
+  if (isCoders()) return <p>멤버 초대와 워크스페이스 접근 권한은 Coders의 워크스페이스 메뉴에서 관리합니다.</p>;
 
   async function handleSubmit() {
     const validEmails = emails.filter((email) => {

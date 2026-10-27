@@ -21,9 +21,10 @@ import { useDisclosure } from "@mantine/hooks";
 import { WorkspaceInviteForm } from "@/features/workspace/components/members/components/workspace-invite-form";
 import { CustomAvatar } from "@/components/ui/custom-avatar";
 import { AvatarIconType } from "@/features/attachments/types/attachment.types";
-import { useHasFeature } from "@/ee/hooks/use-feature";
-import { Feature } from "@/ee/features";
-import { useUpgradeLabel } from "@/ee/hooks/use-upgrade-label";
+import { useHasFeature } from "@/community/edition";
+import { Feature } from "@/community/features";
+import { useUpgradeLabel } from "@/community/edition";
+import { SourceLink } from '@/community/source-link';
 
 export default function GlobalSidebar() {
   const { t } = useTranslation();
@@ -67,6 +68,7 @@ export default function GlobalSidebar() {
 
   return (
     <div className={classes.navbar}>
+      <div style={{ padding: '8px 16px' }}><SourceLink /></div>
       <ScrollArea w="100%" style={{ flex: 1 }}>
         <div className={classes.section}>
           {mainNavItems.map((item) =>

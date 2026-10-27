@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { useAtom } from "jotai";
 import { workspaceAtom } from "@/features/user/atoms/current-user-atom.ts";
 import { DocumentTitle } from "@/components/ui/document-title.tsx";
+import { isCoders } from '@/lib/coders';
 
 export default function WorkspaceMembers() {
   const { t } = useTranslation();
@@ -52,7 +53,7 @@ export default function WorkspaceMembers() {
               label: t("Members") + ` (${workspace?.memberCount})`,
               value: "members",
             },
-            { label: t("Pending"), value: "invites" },
+            ...(!isCoders() ? [{ label: t("Pending"), value: "invites" }] : []),
           ]}
           withItemsBorders={false}
         />
@@ -62,7 +63,7 @@ export default function WorkspaceMembers() {
 
       <Space h="lg" />
 
-      {segmentValue === "invites" ? (
+      {segmentValue === "invites" && !isCoders() ? (
         <WorkspaceInvitesTable />
       ) : (
         <WorkspaceMembersTable />

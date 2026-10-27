@@ -1,0 +1,20 @@
+/* SPDX-License-Identifier: AGPL-3.0-only — Coders community build. */
+export const Feature = {
+  AI: "ai",
+  API_KEYS: "api_keys",
+  ATTACHMENT_INDEXING: "attachment_indexing",
+  AUDIT_LOGS: "audit_logs",
+  BASES: "bases",
+  COMMENT_RESOLUTION: "comment_resolution",
+  CONFLUENCE_IMPORT: "confluence_import",
+  DOCX_EXPORT: "docx_export",
+  DOCX_IMPORT: "docx_import",
+  INTEGRATIONS: "integrations",
+  INTEGRATIONS_ADVANCED: "integrations_advanced",
+  PAGE_VERIFICATION: "page_verification",
+  PDF_IMPORT: "pdf_import",
+  PERSONAL_SPACES: "personal_spaces",
+  PUBLIC_SPACE_APPEARANCE: "public_space_appearance",
+  SECURITY_SETTINGS: "security_settings",
+  TEMPLATES: "templates",
+} as const;

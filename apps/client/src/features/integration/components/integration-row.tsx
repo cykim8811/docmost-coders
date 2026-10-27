@@ -13,9 +13,9 @@ import {
   Integration,
 } from "../types/integration.types";
 import { getIntegrationIcon } from "./integration-icons";
-import { useHasFeature } from "@/ee/hooks/use-feature";
-import { useUpgradeLabel } from "@/ee/hooks/use-upgrade-label";
-import { Feature } from "@/ee/features";
+import { useHasFeature } from "@/community/edition";
+import { useUpgradeLabel } from "@/community/edition";
+import { Feature } from "@/community/features";
 import { isCloud } from "@/lib/config.ts";
 
 // Keep in sync with apps/server/src/ee/licence/feature-registry.ts.

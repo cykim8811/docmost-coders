@@ -18,7 +18,7 @@ const TableOfContents = lazy(() =>
   ).then((m) => ({ default: m.TableOfContents })),
 );
 const AsideChatPanel = lazyWithPrefetch(
-  () => import("@/ee/ai-chat/components/aside-chat-panel"),
+  () => import("@/community/unavailable"),
 );
 const PageDetailsAside = lazy(() =>
   import("@/features/page-details/components/page-details-aside.tsx").then(

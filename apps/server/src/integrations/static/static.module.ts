@@ -13,6 +13,8 @@ export class StaticModule implements OnModuleInit {
   ) {}
 
   public async onModuleInit() {
+    // Coders serves the immutable client artifact, not a writable index.html.
+    if (process.env.CODERS_MODE === 'true') return;
     const httpAdapter = this.httpAdapterHost.httpAdapter;
     const app = httpAdapter.getInstance();
 

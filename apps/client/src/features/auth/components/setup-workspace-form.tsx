@@ -15,7 +15,7 @@ import {
 import useAuth from "@/features/auth/hooks/use-auth";
 import classes from "@/features/auth/components/auth.module.css";
 import { useTranslation } from "react-i18next";
-import SsoCloudSignup from "@/ee/components/sso-cloud-signup.tsx";
+import { UnavailableFeature as SsoCloudSignup } from "@/community/edition";
 import { isCloud } from "@/lib/config.ts";
 import { Link } from "react-router-dom";
 import APP_ROUTE from "@/lib/app-route.ts";

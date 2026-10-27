@@ -29,6 +29,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   canActivate(context: ExecutionContext) {
+    if (process.env.CODERS_MODE === 'true') {
+      const req = context.switchToHttp().getRequest();
+      if (!req.raw?.codersAuth) throw new UnauthorizedException();
+      req.user = req.raw.codersAuth;
+      return true;
+    }
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),

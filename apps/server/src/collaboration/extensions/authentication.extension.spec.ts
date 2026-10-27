@@ -56,6 +56,7 @@ async function makeExtension(
     spaceMemberRepo as any,
     pagePermissionRepo as any,
     { getOrThrow: () => ({ duplicate: () => subscriber }) } as any,
+    { authenticate: jest.fn() } as any,
   );
   const instance = {
     documents: new Map(

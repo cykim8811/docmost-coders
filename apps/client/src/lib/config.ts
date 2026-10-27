@@ -2,6 +2,7 @@ import bytes from "bytes";
 import { castToBoolean } from "@/lib/utils.tsx";
 import { AvatarIconType } from "@/features/attachments/types/attachment.types.ts";
 import { sanitizeUrl } from "@docmost/editor-ext";
+import { codersApiUrl, isCoders } from './coders';
 
 declare global {
   interface Window {
@@ -10,11 +11,11 @@ declare global {
 }
 
 export function getAppName(): string {
-  return "Docmost";
+  return isCoders() ? "Coders 문서" : "Docmost";
 }
 
 export function getAppUrl(): string {
-  return `${window.location.protocol}//${window.location.host}`;
+  return location.origin + (isCoders() ? '/#' : '');
 }
 
 export function getServerAppUrl(): string {
@@ -22,7 +23,7 @@ export function getServerAppUrl(): string {
 }
 
 export function getBackendUrl(): string {
-  return getAppUrl() + "/api";
+  return location.origin + "/api";
 }
 
 export function getCollaborationUrl(): string {
@@ -30,7 +31,7 @@ export function getCollaborationUrl(): string {
     getConfigValue("COLLAB_URL") ||
     (import.meta.env.DEV ? process.env.APP_URL : getAppUrl());
 
-  const collabUrl = new URL("/collab", baseUrl);
+  const collabUrl = new URL(isCoders() ? "/api/collab" : "/collab", baseUrl);
   collabUrl.protocol = collabUrl.protocol === "https:" ? "wss:" : "ws:";
   return collabUrl.toString();
 }
@@ -58,7 +59,7 @@ export function getAvatarUrl(
   if (!avatarUrl) return null;
   if (avatarUrl?.startsWith("http")) return avatarUrl;
 
-  return getBackendUrl() + `/attachments/img/${type}/` + encodeURI(avatarUrl);
+  return codersApiUrl(getBackendUrl() + `/attachments/img/${type}/` + encodeURI(avatarUrl));
 }
 
 export function getSpaceUrl(spaceSlug: string) {
@@ -70,10 +71,10 @@ export function getFileUrl(src: string) {
   if (src.startsWith("http")) return src;
   if (src.startsWith("/api/")) {
     // Remove the '/api' prefix
-    return getBackendUrl() + src.substring(4);
+    return codersApiUrl(getBackendUrl() + src.substring(4));
   }
   if (src.startsWith("/files/")) {
-    return getBackendUrl() + src;
+    return codersApiUrl(getBackendUrl() + src);
   }
   return sanitizeUrl(src);
 }

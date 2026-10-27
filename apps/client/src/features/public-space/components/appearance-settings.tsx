@@ -16,9 +16,9 @@ import {
 } from "@/features/public-space/theme/docs-theme.ts";
 import { IPublicSpaceAppearance } from "@/features/public-space/types/public-space.types.ts";
 import { usePublishSpaceMutation } from "@/features/public-space/queries/public-space-query.ts";
-import { useHasFeature } from "@/ee/hooks/use-feature.ts";
-import { useUpgradeLabel } from "@/ee/hooks/use-upgrade-label.ts";
-import { Feature } from "@/ee/features.ts";
+import { useHasFeature } from "@/community/edition";
+import { useUpgradeLabel } from "@/community/edition";
+import { Feature } from "@/community/features";
 import classes from "./appearance-settings.module.css";
 
 type AppearanceSettingsProps = {

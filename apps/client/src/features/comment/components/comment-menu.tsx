@@ -10,9 +10,9 @@ import {
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { useTranslation } from "react-i18next";
-import { useHasFeature } from "@/ee/hooks/use-feature";
-import { Feature } from "@/ee/features";
-import { useUpgradeLabel } from "@/ee/hooks/use-upgrade-label";
+import { useHasFeature } from "@/community/edition";
+import { Feature } from "@/community/features";
+import { useUpgradeLabel } from "@/community/edition";
 import { useClipboard } from "@/hooks/use-clipboard";
 import { getAppUrl } from "@/lib/config";
 

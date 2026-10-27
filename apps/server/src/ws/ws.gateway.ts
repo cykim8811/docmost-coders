@@ -20,8 +20,11 @@ import {
 } from './ws.utils';
 import { BaseRealtimeBridge } from './base-realtime.bridge';
 import * as cookie from 'cookie';
+import { CodersIdentityService } from '../integrations/coders/identity.service';
 
 @WebSocketGateway({
+  path: process.env.CODERS_MODE === 'true' ? '/events' : '/socket.io',
+  addTrailingSlash: process.env.CODERS_MODE !== 'true',
   cors: { origin: '*' },
   transports: ['websocket'],
 })
@@ -39,6 +42,7 @@ export class WsGateway
     private tokenService: TokenService,
     private wsService: WsService,
     private baseRealtime: BaseRealtimeBridge,
+    private readonly codersIdentities: CodersIdentityService,
   ) {}
 
   afterInit(server: Server): void {
@@ -49,10 +53,13 @@ export class WsGateway
   async handleConnection(client: Socket, ...args: any[]): Promise<void> {
     try {
       const cookies = cookie.parse(client.handshake.headers.cookie ?? '');
-      const token: JwtPayload = await this.tokenService.verifyJwt(
-        cookies['authToken'],
-        JwtType.ACCESS,
-      );
+      let token: JwtPayload;
+      if (process.env.CODERS_MODE === 'true') {
+        const auth = await this.codersIdentities.authenticate(client.handshake.headers);
+        token = { sub: auth.user.id, email: auth.user.email, workspaceId: auth.workspace.id, type: JwtType.ACCESS };
+      } else {
+        token = await this.tokenService.verifyJwt(cookies['authToken'], JwtType.ACCESS);
+      }
 
       const userId = token.sub;
       const workspaceId = token.workspaceId;

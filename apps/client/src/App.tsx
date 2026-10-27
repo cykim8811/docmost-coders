@@ -5,7 +5,7 @@ import { Error404 } from "@/components/ui/error-404.tsx";
 import { isCloud } from "@/lib/config.ts";
 import { lazyWithPrefetch, prefetchLazyComponents } from "@/lib/lazy-prefetch.ts";
 import { useTranslation } from "react-i18next";
-import { useRedirectToCloudSelect } from "@/ee/hooks/use-redirect-to-cloud-select.tsx";
+import { useRedirectToCloudSelect } from "@/community/edition";
 import { useTrackOrigin } from "@/hooks/use-track-origin";
 
 
@@ -35,13 +35,13 @@ const PageRedirect = lazyWithPrefetch(() => import("@/pages/page/page-redirect.t
 const InviteSignup = lazyWithPrefetch(() => import("@/pages/auth/invite-signup.tsx"));
 const ForgotPassword = lazyWithPrefetch(() => import("@/pages/auth/forgot-password.tsx"));
 const PasswordReset = lazyWithPrefetch(() => import("./pages/auth/password-reset"));
-const Billing = lazyWithPrefetch(() => import("@/ee/billing/pages/billing.tsx"));
-const CloudLogin = lazyWithPrefetch(() => import("@/ee/pages/cloud-login.tsx"));
-const CreateWorkspace = lazyWithPrefetch(() => import("@/ee/pages/create-workspace.tsx"));
-const Security = lazyWithPrefetch(() => import("@/ee/security/pages/security.tsx"));
-const License = lazyWithPrefetch(() => import("@/ee/licence/pages/license.tsx"));
+const Billing = lazyWithPrefetch(() => import("@/community/unavailable"));
+const CloudLogin = lazyWithPrefetch(() => import("@/community/unavailable"));
+const CreateWorkspace = lazyWithPrefetch(() => import("@/community/unavailable"));
+const Security = lazyWithPrefetch(() => import("@/community/unavailable"));
+const License = lazyWithPrefetch(() => import("@/community/unavailable"));
 const SharedPage = lazyWithPrefetch(() => import("@/pages/share/shared-page.tsx"));
-const PdfRenderPage = lazyWithPrefetch(() => import("@/ee/pdf-export/pdf-render-page.tsx"));
+const PdfRenderPage = lazyWithPrefetch(() => import("@/community/unavailable"));
 const Shares = lazyWithPrefetch(() => import("@/pages/settings/shares/shares.tsx"));
 const ShareLayout = lazyWithPrefetch(
   () => import("@/features/share/components/share-layout.tsx"),
@@ -58,35 +58,35 @@ const PublicSpaceDirectoryPage = lazyWithPrefetch(
 );
 const SpacesPage = lazyWithPrefetch(() => import("@/pages/spaces/spaces.tsx"));
 const MfaChallengePage = lazyWithPrefetch(() =>
-  import("@/ee/mfa/pages/mfa-challenge-page").then((m) => ({
+  import("@/community/unavailable").then((m) => ({
     default: m.MfaChallengePage,
   })),
 );
 const MfaSetupRequiredPage = lazyWithPrefetch(() =>
-  import("@/ee/mfa/pages/mfa-setup-required-page").then((m) => ({
+  import("@/community/unavailable").then((m) => ({
     default: m.MfaSetupRequiredPage,
   })),
 );
 const SpaceTrash = lazyWithPrefetch(() => import("@/pages/space/space-trash.tsx"));
-const UserApiKeys = lazyWithPrefetch(() => import("@/ee/api-key/pages/user-api-keys"));
+const UserApiKeys = lazyWithPrefetch(() => import("@/community/unavailable"));
 const WorkspaceApiKeys = lazyWithPrefetch(
-  () => import("@/ee/api-key/pages/workspace-api-keys"),
+  () => import("@/community/unavailable"),
 );
-const AiSettings = lazyWithPrefetch(() => import("@/ee/ai/pages/ai-settings.tsx"));
-const BasePage = lazyWithPrefetch(() => import("@/ee/base/pages/base-page.tsx"));
-const AuditLogs = lazyWithPrefetch(() => import("@/ee/audit/pages/audit-logs.tsx"));
+const AiSettings = lazyWithPrefetch(() => import("@/community/unavailable"));
+const BasePage = lazyWithPrefetch(() => import("@/community/unavailable"));
+const AuditLogs = lazyWithPrefetch(() => import("@/community/unavailable"));
 const VerifiedPages = lazyWithPrefetch(
-  () => import("@/ee/page-verification/pages/verified-pages.tsx"),
+  () => import("@/community/unavailable"),
 );
-const TemplateList = lazyWithPrefetch(() => import("@/ee/template/pages/template-list"));
+const TemplateList = lazyWithPrefetch(() => import("@/community/unavailable"));
 const TemplateEditor = lazyWithPrefetch(
-  () => import("@/ee/template/pages/template-editor"),
+  () => import("@/community/unavailable"),
 );
 const FavoritesPage = lazyWithPrefetch(() => import("@/pages/favorites/favorites-page"));
-const AiChat = lazyWithPrefetch(() => import("@/ee/ai-chat/pages/ai-chat.tsx"));
-const VerifyEmail = lazyWithPrefetch(() => import("@/ee/pages/verify-email.tsx"));
+const AiChat = lazyWithPrefetch(() => import("@/community/unavailable"));
+const VerifyEmail = lazyWithPrefetch(() => import("@/community/unavailable"));
 const LabelPage = lazyWithPrefetch(() => import("@/pages/label/label-page"));
-const OAuthConsent = lazyWithPrefetch(() => import("@/ee/oauth/pages/oauth-consent.tsx"));
+const OAuthConsent = lazyWithPrefetch(() => import("@/community/unavailable"));
 const Integrations = lazyWithPrefetch(
   () => import("@/features/integration/pages/integrations.tsx"),
 );

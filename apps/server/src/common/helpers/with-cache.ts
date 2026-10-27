@@ -9,7 +9,10 @@ export async function withCache<T>(
   fn: () => Promise<T>,
   opts?: CacheOptions,
 ): Promise<T> {
-  if (opts?.skipCache) return fn();
+  // A resource has one server in Coders. Read current authorization state so
+  // additions and revocations take effect on the next request, without stale
+  // positive or negative permission entries.
+  if (opts?.skipCache || process.env.CODERS_MODE === 'true') return fn();
 
   try {
     const cached = await cacheManager.get<{ v: T }>(key);

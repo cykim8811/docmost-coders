@@ -8,7 +8,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import { mantineCssResolver, theme } from "@/theme";
 import { MantineProvider } from "@mantine/core";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, HashRouter } from "react-router-dom";
+import { isCoders } from '@/lib/coders';
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -49,9 +50,10 @@ installChunkLoadRecovery();
 
 const container = document.getElementById("root") as HTMLElement;
 const root = (container as any).__reactRoot ??= ReactDOM.createRoot(container);
+const Router = isCoders() ? HashRouter : BrowserRouter;
 
 root.render(
-  <BrowserRouter>
+  <Router>
     <MantineProvider theme={theme} cssVariablesResolver={mantineCssResolver}>
       <ModalsProvider>
         <QueryClientProvider client={queryClient}>
@@ -66,5 +68,5 @@ root.render(
         </QueryClientProvider>
       </ModalsProvider>
     </MantineProvider>
-  </BrowserRouter>,
+  </Router>,
 );

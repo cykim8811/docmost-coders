@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "name": "Coders 문서",
+  "frontend": { "directory": "coders/public" },
+  "endpoints": {
+    "bridge": {
+      "path": "/bridge",
+      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"],
+      "budget": "30.00"
+    },
+    "collab": { "path": "/collab", "methods": ["GET"], "budget": "30.00" },
+    "events": { "path": "/events", "methods": ["GET"], "budget": "30.00" },
+    "health": { "path": "/api/health", "methods": ["GET"], "budget": "1.00" }
+  },
+  "permissions": ["frontend"]
+}

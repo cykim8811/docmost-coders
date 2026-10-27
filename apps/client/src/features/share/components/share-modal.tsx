@@ -25,7 +25,7 @@ import CopyTextButton from "@/components/common/copy.tsx";
 import { getAppUrl, isCloud } from "@/lib/config.ts";
 import { buildPageUrl } from "@/features/page/page.utils.ts";
 import classes from "@/features/share/components/share.module.css";
-import useTrial from "@/ee/hooks/use-trial.tsx";
+import { useTrial } from "@/community/edition";
 import { useAtom } from "jotai";
 import { workspaceAtom } from "@/features/user/atoms/current-user-atom.ts";
 import { useSpaceQuery } from "@/features/space/queries/space-query.ts";

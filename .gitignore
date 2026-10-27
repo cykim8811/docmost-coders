@@ -5,6 +5,8 @@ data
 # compiled output
 dist
 /node_modules
+.pnpm-store/
+.coders-tools/
 
 # Logs
 logs

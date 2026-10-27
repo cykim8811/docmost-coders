@@ -18,6 +18,7 @@ import {
   IPageSearch,
 } from "@/features/search/types/search.types";
 import DOMPurify from "dompurify";
+import { getFileUrl } from '@/lib/config';
 import { useTranslation } from "react-i18next";
 import { timeAgo } from "@/lib/time.ts";
 
@@ -49,7 +50,7 @@ export function SearchResultItem({
       e.preventDefault();
       e.stopPropagation();
       const downloadUrl = `/api/files/${attachmentResult.id}/${attachmentResult.fileName}`;
-      window.open(downloadUrl, "_blank");
+      window.open(getFileUrl(downloadUrl), "_blank");
     };
 
     return (

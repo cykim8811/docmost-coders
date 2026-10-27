@@ -29,6 +29,7 @@ import { LinearModule } from './integration/providers/linear/linear.module';
 import { FavoriteModule } from './favorite/favorite.module';
 import { SessionModule } from './session/session.module';
 import { ClsMiddleware } from 'nestjs-cls';
+import { CodersMiddleware } from '../integrations/coders/coders.middleware';
 
 @Module({
   imports: [
@@ -65,6 +66,8 @@ export class CoreModule implements NestModule {
       { path: 'billing/stripe/webhook', method: RequestMethod.POST },
       { path: 'integrations/oauth/*/callback', method: RequestMethod.GET },
     ];
+
+    consumer.apply(CodersMiddleware).forRoutes('*');
 
     consumer
       .apply(DomainMiddleware)

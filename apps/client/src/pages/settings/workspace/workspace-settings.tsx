@@ -3,11 +3,11 @@ import WorkspaceNameForm from "@/features/workspace/components/settings/componen
 import WorkspaceIcon from "@/features/workspace/components/settings/components/workspace-icon.tsx";
 import { useTranslation } from "react-i18next";
 import { isBetaPublicSpaces, isCloud } from "@/lib/config.ts";
-import ManageHostname from "@/ee/components/manage-hostname.tsx";
+import { UnavailableFeature as ManageHostname } from "@/community/edition";
 import { Divider } from "@mantine/core";
-import AllowMemberTemplates from "@/ee/security/components/allow-member-templates.tsx";
+import { UnavailableFeature as AllowMemberTemplates } from "@/community/edition";
 import WorkspaceDefaultPageEditMode from "@/features/workspace/components/settings/components/workspace-default-page-edit-mode.tsx";
-import PersonalSpacesSetting from "@/ee/personal-space/components/personal-spaces-setting.tsx";
+import { UnavailableFeature as PersonalSpacesSetting } from "@/community/edition";
 import AllowPublicSpaces from "@/features/workspace/components/settings/components/allow-public-spaces.tsx";
 import { DocumentTitle } from "@/components/ui/document-title.tsx";
 

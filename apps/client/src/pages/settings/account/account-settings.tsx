@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { AccountMfaSection } from "@/features/user/components/account-mfa-section";
 import SessionList from "@/features/session/components/session-list";
 import { DocumentTitle } from "@/components/ui/document-title.tsx";
+import { isCoders } from '@/lib/coders';
 
 export default function AccountSettings() {
   const { t } = useTranslation();
@@ -23,6 +24,7 @@ export default function AccountSettings() {
 
       <Divider my="lg" />
 
+      {!isCoders() && <>
       <ChangeEmail />
 
       <Divider my="lg" />
@@ -36,6 +38,7 @@ export default function AccountSettings() {
       <Divider my="lg" />
 
       <SessionList />
+      </>}
     </>
   );
 }

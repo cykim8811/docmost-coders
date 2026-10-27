@@ -28,7 +28,7 @@ vi.mock("@/features/editor/extensions/base-paste-menu", () => ({
   basePasteMenuKey: { getState: () => mocks.pasteState },
 }));
 
-vi.mock("@/ee/hooks/use-feature", () => ({
+vi.mock("@/community/edition", () => ({
   useHasFeature: () => mocks.hasBases,
 }));
 

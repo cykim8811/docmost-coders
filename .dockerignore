@@ -1,4 +1,12 @@
 **/node_modules
+node_modules
+.pnpm-store
+.coders-tools
+.git
+apps/*/node_modules
+packages/*/node_modules
+apps/*/dist
+packages/*/dist
 **/.git
 **/dist
 /data

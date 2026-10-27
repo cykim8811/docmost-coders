@@ -17,7 +17,7 @@ export class CollabWsAdapter {
           this.wss.handleUpgrade(request, socket, head, (ws) => {
             this.wss.emit('connection', ws, request);
           });
-        } else if (pathname === '/socket.io/') {
+        } else if (pathname === '/socket.io/' || (process.env.CODERS_MODE === 'true' && (pathname === '/events/' || pathname === '/events'))) {
           return;
         } else {
           socket.destroy();

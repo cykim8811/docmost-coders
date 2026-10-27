@@ -9,15 +9,15 @@ import { showTabAtElement } from "@/features/editor/utils";
 import { isEditorReady } from "@docmost/editor-ext";
 import CommentActions from "@/features/comment/components/comment-actions";
 import CommentMenu from "@/features/comment/components/comment-menu";
-import { useHasFeature } from "@/ee/hooks/use-feature";
-import { Feature } from "@/ee/features";
-import ResolveComment from "@/ee/comment/components/resolve-comment";
+import { useHasFeature } from "@/community/edition";
+import { Feature } from "@/community/features";
+import { UnavailableFeature as ResolveComment } from "@/community/edition";
 import { useHover } from "@mantine/hooks";
 import {
   useDeleteCommentMutation,
   useUpdateCommentMutation,
 } from "@/features/comment/queries/comment-query";
-import { useResolveCommentMutation } from "@/ee/comment/queries/comment-query";
+import { useResolveCommentMutation } from "@/community/edition";
 import { IComment } from "@/features/comment/types/comment.types";
 import { CustomAvatar } from "@/components/ui/custom-avatar.tsx";
 import { currentUserAtom } from "@/features/user/atoms/current-user-atom.ts";

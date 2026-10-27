@@ -10,21 +10,21 @@ import {
 import { useTranslation } from "react-i18next";
 import { useAtomValue } from "jotai";
 import { ErrorBoundary } from "react-error-boundary";
-import { useConvertPageToBaseMutation } from "@/ee/base/queries/base-query";
+import { useConvertPageToBaseMutation } from "@/community/edition";
 import {
   pageEditorAtom,
   titleEditorAtom,
   yjsSyncedAtom,
 } from "@/features/editor/atoms/editor-atoms";
-import { useHasFeature } from "@/ee/hooks/use-feature";
-import { Feature } from "@/ee/features";
-import { ITemplate } from "@/ee/template/types/template.types";
-import { getTemplateById } from "@/ee/template/services/template-service.ts";
-import { applyTemplateToPage } from "@/ee/template/template.utils";
+import { useHasFeature } from "@/community/edition";
+import { Feature } from "@/community/features";
+import { ITemplate } from "@/community/edition";
+import { getTemplateById } from "@/community/edition";
+import { applyTemplateToPage } from "@/community/edition";
 import classes from "./empty-page-get-started.module.css";
 
 const TemplatePickerModal = lazy(
-  () => import("@/ee/template/components/template-picker-modal"),
+  () => import("@/community/unavailable"),
 );
 
 type EmptyPageGetStartedProps = {

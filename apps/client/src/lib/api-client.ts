@@ -1,14 +1,28 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios";
 import APP_ROUTE from "@/lib/app-route.ts";
 import { isCloud } from "@/lib/config.ts";
+import { codersApiUrl, isCoders, originalApiPath } from "./coders";
 
 const api: AxiosInstance = axios.create({
   baseURL: "/api",
   withCredentials: true,
 });
 
+api.interceptors.request.use((config) => {
+  if (isCoders()) {
+    const path = axios.getUri({ ...config, baseURL: config.url?.startsWith('/api/') ? '' : '/api' });
+    config.url = codersApiUrl(path);
+    config.baseURL = '';
+    config.params = undefined;
+  }
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => {
+    if (isCoders() && response.status === 202) {
+      throw new AxiosError('Coders is preparing the app', 'CODERS_PREPARING', response.config, response.request, response);
+    }
     // we need the response headers for these endpoints
     const exemptEndpoints = [
       "/api/pages/export",
@@ -17,7 +31,7 @@ api.interceptors.response.use(
       "/api/bases/export-csv",
     ];
     if (response.request.responseURL) {
-      const path = new URL(response.request.responseURL)?.pathname;
+      const path = originalApiPath(response.request.responseURL);
       if (path && exemptEndpoints.includes(path)) {
         return response;
       }
@@ -29,7 +43,7 @@ api.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401: {
-          const url = new URL(error.request.responseURL)?.pathname;
+          const url = originalApiPath(error.request.responseURL);
           if (url === "/api/auth/collab-token") return;
           if (window.location.pathname.startsWith("/share/")) return;
           // public docs probe authed endpoints; reject without the login redirect
@@ -56,7 +70,7 @@ api.interceptors.response.use(
           ) {
             console.log("workspace not found");
             if (
-              !isCloud() &&
+              !isCloud() && !isCoders() &&
               window.location.pathname != APP_ROUTE.AUTH.SETUP
             ) {
               window.location.href = APP_ROUTE.AUTH.SETUP;
@@ -75,6 +89,7 @@ api.interceptors.response.use(
 );
 
 function redirectToLogin() {
+  if (isCoders()) return; // Core owns sign-in; a password form cannot repair a Core session.
   const exemptPaths = [
     APP_ROUTE.AUTH.LOGIN,
     APP_ROUTE.AUTH.SIGNUP,

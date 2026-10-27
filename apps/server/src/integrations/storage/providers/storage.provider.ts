@@ -15,6 +15,9 @@ import { AzureDriver, LocalDriver, S3Driver } from '../drivers';
 import * as process from 'node:process';
 import { LOCAL_STORAGE_PATH } from '../../../common/helpers';
 import path from 'path';
+import { PostgresDriver } from '../drivers/postgres.driver';
+import { KYSELY_MODULE_CONNECTION_TOKEN } from 'nestjs-kysely';
+import { KyselyDB } from '../../../database/types/kysely.types';
 
 function createStorageDriver(disk: StorageConfig): StorageDriver {
   switch (disk.driver) {
@@ -35,6 +38,8 @@ export const storageDriverConfigProvider = {
     const driver = environmentService.getStorageDriver().toLowerCase();
 
     switch (driver) {
+      case StorageOption.POSTGRES:
+        return { driver, config: {} };
       case StorageOption.LOCAL:
         return {
           driver,
@@ -95,6 +100,7 @@ export const storageDriverConfigProvider = {
 
 export const storageDriverProvider = {
   provide: STORAGE_DRIVER_TOKEN,
-  useFactory: (config: StorageConfig) => createStorageDriver(config),
-  inject: [STORAGE_CONFIG_TOKEN],
+  useFactory: (config: StorageConfig, db: KyselyDB) =>
+    config.driver === StorageOption.POSTGRES ? new PostgresDriver(db) : createStorageDriver(config),
+  inject: [STORAGE_CONFIG_TOKEN, KYSELY_MODULE_CONNECTION_TOKEN()],
 };

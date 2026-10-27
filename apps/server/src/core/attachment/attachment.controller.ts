@@ -562,6 +562,7 @@ export class AttachmentController {
   }
 
   private buildFileUrl(workspace: Workspace, attachment: Attachment): string {
+    if (process.env.CODERS_MODE === 'true') return `/api/files/${attachment.id}/${encodeURIComponent(attachment.fileName)}`;
     return `${this.domainService.getUrl(workspace.hostname)}/api/files/${attachment.id}/${encodeURIComponent(attachment.fileName)}`;
   }
 

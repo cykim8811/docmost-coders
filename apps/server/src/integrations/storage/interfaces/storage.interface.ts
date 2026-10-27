@@ -1,12 +1,14 @@
 import { S3ClientConfig } from '@aws-sdk/client-s3';
 
 export enum StorageOption {
+  POSTGRES = 'postgres',
   LOCAL = 'local',
   S3 = 's3',
   AZURE = 'azure',
 }
 
 export type StorageConfig =
+  | { driver: StorageOption.POSTGRES; config: Record<string, never> }
   | { driver: StorageOption.LOCAL; config: LocalStorageConfig }
   | { driver: StorageOption.S3; config: S3StorageConfig }
   | { driver: StorageOption.AZURE; config: AzureStorageConfig };

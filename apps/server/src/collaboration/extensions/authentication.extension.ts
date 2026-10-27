@@ -27,6 +27,7 @@ import { getPageId } from '../collaboration.util';
 import { COLLAB_ACCESS_RECHECK_CHANNEL } from '../constants';
 import { CollabAccessRecheck } from '../services/collab-access.service';
 import { JwtCollabPayload, JwtType } from '../../core/auth/dto/jwt-payload';
+import { CodersIdentityService } from '../../integrations/coders/identity.service';
 
 type CollabAccess = 'none' | 'read' | 'write';
 
@@ -43,6 +44,7 @@ export class AuthenticationExtension implements Extension {
     private readonly spaceMemberRepo: SpaceMemberRepo,
     private readonly pagePermissionRepo: PagePermissionRepo,
     private readonly redisService: RedisService,
+    private readonly codersIdentities: CodersIdentityService,
   ) {}
 
   async onConfigure({ instance }: onConfigurePayload) {
@@ -76,10 +78,15 @@ export class AuthenticationExtension implements Extension {
 
     let jwtPayload: JwtCollabPayload;
 
-    try {
-      jwtPayload = await this.tokenService.verifyJwt(token, JwtType.COLLAB);
-    } catch (error) {
-      throw new UnauthorizedException('Invalid collab token');
+    if (process.env.CODERS_MODE === 'true') {
+      const auth = await this.codersIdentities.authenticate(Object.fromEntries(data.requestHeaders.entries()));
+      jwtPayload = { sub: auth.user.id, workspaceId: auth.workspace.id, type: JwtType.COLLAB };
+    } else {
+      try {
+        jwtPayload = await this.tokenService.verifyJwt(token, JwtType.COLLAB);
+      } catch (error) {
+        throw new UnauthorizedException('Invalid collab token');
+      }
     }
 
     const userId = jwtPayload.sub;

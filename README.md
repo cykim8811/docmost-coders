@@ -1,3 +1,12 @@
+# Coders 문서 — community adaptation
+
+Docmost의 AGPL 코어를 Coders Core v2에 연결하는 무료 협업 위키 MVP입니다.
+Enterprise 소스는 이 브랜치에서 제거했습니다.
+
+- [Coders 배포·개발 안내](coders/README.md)
+- [변경·라이선스 고지](NOTICE.coders.md)
+- [원본 Docmost](https://github.com/docmost/docmost)
+
 <div align="center">
     <h1><b>Docmost</b></h1>
     <p>
@@ -36,13 +45,10 @@ To get started with Docmost, please refer to our [documentation](https://docmost
 </p>
 
 ### License
-Docmost core is licensed under the open-source AGPL 3.0 license.  
-Enterprise features are available under an enterprise license (Enterprise Edition).  
 
-All files in the following directories are licensed under the Docmost Enterprise license defined in `packages/ee/License`.
-  - apps/server/src/ee
-  - apps/client/src/ee
-  - packages/ee
+This Coders community distribution uses the AGPL-3.0 core. Enterprise source
+paths from upstream have been removed. See [NOTICE.coders.md](NOTICE.coders.md)
+and [LICENSE](LICENSE) for terms and attribution.
 
 ### Contributing
 

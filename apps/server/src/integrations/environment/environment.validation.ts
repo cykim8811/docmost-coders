@@ -50,7 +50,7 @@ export class EnvironmentVariables {
   MAIL_DRIVER: string;
 
   @IsOptional()
-  @IsIn(['local', 's3', 'azure'])
+  @IsIn(['local', 's3', 'azure', 'postgres'])
   STORAGE_DRIVER: string;
 
   @IsOptional()
