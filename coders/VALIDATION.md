@@ -21,7 +21,7 @@
   소스 링크 표시, 브라우저 런타임 예외 없음.
 - 실제 로컬 Core SDK를 제공한 브라우저에서 402 응답 후 같은 멱등성 키로
   재시도하고 원래 요청을 완료하는 흐름 확인. SDK 구현은 포크에 포함하지 않습니다.
-- Core와 같은 script/connect/img/worker CSP 제한을 적용한 브라우저에서도
+- Core와 같은 CSP 제한을 적용하고 `securitypolicyviolation` 이벤트가 없는지 검사한 브라우저에서도
   기본 문서·협업·SDK 재시도 검증 통과.
 - SDK 전송 계층의 multipart·바이너리·상태 코드·준비 중 재시도·네트워크 응답 불명
   처리 및 취소 시 확인 UI 정리 테스트.
@@ -30,7 +30,7 @@
   `/tmp` 64 MiB, 추가 볼륨 없음.
 - Enterprise 소스 디렉토리·프론트 import 부재 검사.
 - 실제 Core `Manifest` 모델로 `coders.json` 검증 통과. 정적 프론트는
-  189파일·7,170,391바이트로 기본 256파일·10MiB 제한 이내입니다.
+  190파일·약 6.84MiB로 기본 256파일·10MiB 제한 이내입니다.
 
 Node.js 26의 전역 Web Storage와 jsdom 테스트 환경 충돌을 피하기 위해
 프론트 테스트에 `NODE_OPTIONS=--no-experimental-webstorage`를 사용했습니다.
@@ -50,3 +50,12 @@ Node.js 26의 전역 Web Storage와 jsdom 테스트 환경 충돌을 피하기 �
 
 프로세스 강제 종료 직전의 미저장 편집까지 무손실임을 보장하는 검증은 아닙니다.
 Core 인프라 비용과 운영 DB의 보관·백업 정책은 별도로 관리해야 합니다.
+
+## 운영 504 조사
+
+2026-10-28 01:44:29 KST 리소스 `r-6209518d541ed4514507b4bb8db616a2f32227e3`의
+bridge 요청에서 Cloudflare `504 origin_gateway_timeout`이 보고되었습니다.
+Ray ID: `a51329adedac2848`. 운영 Core의 이미지 준비·기동·DB/Redis·응답 로그가
+없어 지연 지점은 아직 확정하지 않았습니다. 로컬 성공을 운영 복구로 간주하지 않습니다.
+별도로 폰트 data URL과 manifest 요청을 제거하고 Zod를 JIT 없이 실행하도록 수정했습니다.
+Cloudflare beacon은 앱 소스에 포함되어 있지 않습니다.

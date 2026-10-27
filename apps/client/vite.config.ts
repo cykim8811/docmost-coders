@@ -38,8 +38,19 @@ export default defineConfig(({ mode }) => {
       },
       APP_VERSION: JSON.stringify(process.env.npm_package_version),
     },
-    plugins: [react()],
+    plugins: [
+      react(),
+      {
+        name: "coders-static-csp",
+        transformIndexHtml(html) {
+          return process.env.VITE_CODERS === "true"
+            ? html.replace(/<link\s+rel="manifest"[^>]*>/g, "")
+            : html;
+        },
+      },
+    ],
     build: {
+      ...(process.env.VITE_CODERS === "true" ? { assetsInlineLimit: 0 } : {}),
       rolldownOptions: {
         output: {
           advancedChunks: {

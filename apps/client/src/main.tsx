@@ -1,7 +1,8 @@
+import "./lib/coders-csp";
 import "@mantine/core/styles.css";
 import "@mantine/spotlight/styles.css";
 import "@mantine/notifications/styles.css";
-import '@mantine/dates/styles.css';
+import "@mantine/dates/styles.css";
 import "@/styles/a11y-overrides.css";
 
 import ReactDOM from "react-dom/client";
@@ -9,8 +10,8 @@ import App from "./App.tsx";
 import { mantineCssResolver, theme } from "@/theme";
 import { MantineProvider } from "@mantine/core";
 import { BrowserRouter, HashRouter } from "react-router-dom";
-import { isCoders } from '@/lib/coders';
-import { CodersRecoveryPanel } from '@/community/coders-recovery-panel';
+import { isCoders } from "@/lib/coders";
+import { CodersRecoveryPanel } from "@/community/coders-recovery-panel";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -50,7 +51,8 @@ if (isCloud() && isPostHogEnabled) {
 installChunkLoadRecovery();
 
 const container = document.getElementById("root") as HTMLElement;
-const root = (container as any).__reactRoot ??= ReactDOM.createRoot(container);
+const root = ((container as any).__reactRoot ??=
+  ReactDOM.createRoot(container));
 const Router = isCoders() ? HashRouter : BrowserRouter;
 
 root.render(

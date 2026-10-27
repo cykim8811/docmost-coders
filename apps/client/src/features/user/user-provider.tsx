@@ -13,7 +13,7 @@ import { useCollabToken } from "@/features/auth/queries/auth-query.tsx";
 import { Error404 } from "@/components/ui/error-404.tsx";
 import { useEntitlements } from "@/community/edition";
 import { entitlementAtom } from "@/community/edition";
-import { isCoders } from '@/lib/coders';
+import { isCoders } from "@/lib/coders";
 
 export function UserProvider({ children }: React.PropsWithChildren) {
   const [, setCurrentUser] = useAtom(currentUserAtom);
@@ -31,7 +31,7 @@ export function UserProvider({ children }: React.PropsWithChildren) {
     }
 
     const newSocket = io(SOCKET_URL, {
-      path: isCoders() ? '/api/events' : '/socket.io',
+      path: isCoders() ? "/api/events" : "/socket.io",
       addTrailingSlash: !isCoders(),
       transports: ["websocket"],
       withCredentials: true,
@@ -64,7 +64,8 @@ export function UserProvider({ children }: React.PropsWithChildren) {
   }, [data, isLoading]);
 
   useEffect(() => {
-    document.documentElement.lang = i18n.resolvedLanguage || i18n.language || "en-US";
+    document.documentElement.lang =
+      i18n.resolvedLanguage || i18n.language || "en-US";
   }, [i18n.language, i18n.resolvedLanguage]);
 
   useEffect(() => {
@@ -81,15 +82,39 @@ export function UserProvider({ children }: React.PropsWithChildren) {
 
   if (error) {
     if (isCoders()) {
-      const status = error?.['response']?.status;
-      const needsOwner = error?.['response']?.data?.code === 'coders_owner_setup_required';
-      return <main style={{ padding: 32 }}>
-        <h1>문서를 열 수 없습니다</h1>
-        <p>{needsOwner ? '워크스페이스 소유자가 먼저 문서 앱을 열어 초기 설정을 완료해야 합니다.' : status === 202 ? '앱을 준비하고 있습니다. 잠시 후 다시 시도해 주세요.' : status === 402 ? 'Coders 공동 계좌의 잔액과 실행 예산을 확인해 주세요.' :
-          status === 403 ? 'Coders에서 워크스페이스 접근 권한과 앱 실행 권한을 확인해 주세요.' :
-          '워크스페이스 연결이나 서버 설정을 확인한 뒤 다시 시도해 주세요.'}</p>
-        <button onClick={() => refetch()}>다시 시도</button>
-      </main>;
+      const status = error?.["response"]?.status;
+      const payload = error?.["response"]?.data;
+      const code = payload?.error?.code || payload?.code;
+      const diagnosticCode =
+        typeof code === "string" && /^[a-zA-Z0-9_-]{1,80}$/.test(code)
+          ? code
+          : undefined;
+      const needsOwner = code === "coders_owner_setup_required";
+      return (
+        <main style={{ padding: 32 }}>
+          <h1>문서를 열 수 없습니다</h1>
+          <p>
+            {needsOwner
+              ? "워크스페이스 소유자가 먼저 문서 앱을 열어 초기 설정을 완료해야 합니다."
+              : status === 202
+                ? "앱을 준비하고 있습니다. 잠시 후 다시 시도해 주세요."
+                : status === 402
+                  ? "Coders 공동 계좌의 잔액과 실행 예산을 확인해 주세요."
+                  : status === 401
+                    ? "Coders에서 로그인과 이 프로젝트의 연결 승인을 확인해 주세요."
+                    : status === 504
+                      ? "Coders 원 서버의 응답 시간이 초과되었습니다. 잠시 후 다시 시도하고, 계속되면 운영 서버의 실행 로그를 확인해 주세요."
+                      : status === 403
+                        ? "Coders에서 워크스페이스 접근 권한과 앱 실행 권한을 확인해 주세요."
+                        : "워크스페이스 연결이나 서버 설정을 확인한 뒤 다시 시도해 주세요."}
+          </p>
+          <p role="status">
+            진단: {status ? `HTTP ${status}` : "API 응답을 받지 못했습니다"}
+            {diagnosticCode ? ` · ${diagnosticCode}` : ""}
+          </p>
+          <button onClick={() => refetch()}>다시 시도</button>
+        </main>
+      );
     }
     return <></>;
   }

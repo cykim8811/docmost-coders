@@ -42,6 +42,12 @@ const output = process.env.TEST_SCREENSHOT || "/app/.coders-tools/browser.png";
     });
     let eventConnections = 0;
     for (const page of [a, b]) {
+      await page.addInitScript(() => {
+        window.__cspViolations = [];
+        document.addEventListener("securitypolicyviolation", (event) => {
+          window.__cspViolations.push({ directive: event.effectiveDirective, blocked: event.blockedURI, source: event.sourceFile, line: event.lineNumber });
+        });
+      });
       page.on("pageerror", (error) => errors.push(error.message));
       page.on("websocket", (socket) => {
         if (socket.url().includes("/api/events"))
@@ -113,6 +119,9 @@ const output = process.env.TEST_SCREENSHOT || "/app/.coders-tools/browser.png";
     );
     await a.screenshot({ path: output, fullPage: true });
     assert.deepEqual(errors, [], "Browser runtime exceptions");
+    for (const page of [a, b]) {
+      assert.deepEqual(await page.evaluate(() => window.__cspViolations), [], "Core CSP violations");
+    }
     console.log(
       "PASS browser: Core identity, two-user editing, reload persistence, source link",
     );
