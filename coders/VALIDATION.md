@@ -30,7 +30,7 @@
   `/tmp` 64 MiB, 추가 볼륨 없음.
 - Enterprise 소스 디렉토리·프론트 import 부재 검사.
 - 실제 Core `Manifest` 모델로 `coders.json` 검증 통과. 정적 프론트는
-  190파일·약 6.84MiB로 기본 256파일·10MiB 제한 이내입니다.
+  191파일·7,169,573바이트로 기본 256파일·10MiB 제한 이내입니다.
 
 Node.js 26의 전역 Web Storage와 jsdom 테스트 환경 충돌을 피하기 위해
 프론트 테스트에 `NODE_OPTIONS=--no-experimental-webstorage`를 사용했습니다.
