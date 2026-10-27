@@ -1,7 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
-import { EnvironmentService } from '../environment/environment.service';
-import { createRetryStrategy, parseRedisUrl } from '../../common/helpers';
+import {
+  QueueConnection,
+  QueueConnectionModule,
+} from './queue-connection.module';
 import { QueueName } from './constants';
 import { GeneralQueueProcessor } from './processors/general-queue.processor';
 
@@ -9,19 +11,10 @@ import { GeneralQueueProcessor } from './processors/general-queue.processor';
 @Module({
   imports: [
     BullModule.forRootAsync({
-      useFactory: (environmentService: EnvironmentService) => {
-        const redisConfig = parseRedisUrl(environmentService.getRedisUrl());
+      imports: [QueueConnectionModule],
+      useFactory: (connection: QueueConnection) => {
         return {
-          connection: {
-            host: redisConfig.host,
-            port: redisConfig.port,
-            username: redisConfig.username,
-            password: redisConfig.password,
-            db: redisConfig.db,
-            family: redisConfig.family,
-            tls: redisConfig.tls,
-            retryStrategy: createRetryStrategy(),
-          },
+          connection: connection.getConnection(),
           defaultJobOptions: {
             attempts: 3,
             backoff: {
@@ -37,7 +30,7 @@ import { GeneralQueueProcessor } from './processors/general-queue.processor';
           },
         };
       },
-      inject: [EnvironmentService],
+      inject: [QueueConnection],
     }),
     BullModule.registerQueue({
       name: QueueName.EMAIL_QUEUE,

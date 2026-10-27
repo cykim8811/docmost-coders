@@ -61,7 +61,8 @@ node scripts/coders/check-community.cjs
 원본의 Enterprise 릴리스 워크플로는 이 포크의 배포에 사용하지 않습니다.
 
 Coders에서 해당 공개 저장소와 커밋을 준비하고, 리소스의 PostgreSQL 보관 용량과
-Redis를 활성화한 뒤 `frontend` 권한을 승인합니다. `network`, `transfer`,
+워크스페이스의 보관 용량·기간을 선택하고 `frontend` 권한을 승인합니다.
+`coders.json`의 `services: ["postgres", "redis"]` 선언으로 두 서비스를 준비합니다. `network`, `transfer`,
 `openai` 권한은 이 MVP에 필요하지 않습니다.
 
 공개 빌드가 완료된 커밋에 대응하는 앱 주소는 다음 형식입니다.
@@ -73,7 +74,13 @@ https://core-v2.coders.kr/github/cykim8811/docmost-coders/{40자리_커밋}
 ## 운영 조건과 남은 실환경 확인
 
 - 실제 Coders DB에서 `unaccent`, `pg_trgm` 확장과 함수·트리거 생성 권한이 필요합니다.
-- 실제 Coders Redis의 ACL이 BullMQ의 Lua 스크립트, pub/sub, 큐 명령을 허용하는지 확인해야 합니다.
+- Redis 7.4의 Core ACL(Lua·Pub/Sub 허용, 관리·위험 명령 차단)과
+  32개 연결·64 MiB·`noeviction`·AOF `appendfsync always` 조건에서 검증합니다.
+  Coders에서는 큐의 일반 연결을 공유하고 워커 대기 연결만 별도로 유지합니다.
+  `CODERS_MODE=true REDIS_URL=... node scripts/coders/redis-smoke.cjs`가 큐 13개·워커 7개의 연결 예산과 작업 처리를 검사합니다.
+- Redis는 앱 자동 중지와 별개로 실행·과금됩니다. Redis의 AOF·스냅샷·재작성 파일은
+  PostgreSQL과 보관 용량을 공유합니다. 64 MiB 초과 시 키를 삭제하지 않고 쓰기를 거부합니다.
+  잔액 부족·소유자 중지·보관 만료 정책을 따르며, 재연결이 저장 용량 부족을 해결하지는 않습니다.
 - 플랫폼의 기본 WebSocket 최대 300초, 메시지 1 MiB, 리소스 동시 연결 32개 제한을 따릅니다.
   연결 수는 사용자 수와 같지 않습니다. 대규모 문서의 첫 동기화는 1 MiB 제한에 걸릴 수 있습니다.
 - 재접속과 DB 복원은 구현했지만, 프로세스가 강제 종료되면 마지막 DB 저장 이전 편집은
@@ -92,7 +99,7 @@ https://core-v2.coders.kr/github/cykim8811/docmost-coders/{40자리_커밋}
 
 ```bash
 NODE_OPTIONS=--no-experimental-webstorage pnpm --filter client test
-pnpm --filter server test --runInBand --silent integrations/coders common/guards/jwt-auth.guard collaboration/extensions/authentication.extension common/helpers/with-cache
+pnpm --filter server test --runInBand --silent integrations/queue/queue-connection integrations/health/redis.health integrations/coders common/guards/jwt-auth.guard collaboration/extensions/authentication.extension common/helpers/with-cache
 ```
 
 로컬 통합 검증은 별도 PostgreSQL 18·Redis 8과 읽기 전용 앱 컨테이너를 사용합니다.

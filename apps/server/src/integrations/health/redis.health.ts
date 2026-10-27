@@ -19,19 +19,24 @@ export class RedisHealthIndicator {
   async pingCheck(key: string): Promise<HealthIndicatorResult> {
     const indicator = this.healthIndicatorService.check(key);
 
+    let redis: Redis | undefined;
     try {
       const redisUrl = this.environmentService.getRedisUrl();
-      const redis = new Redis(redisUrl, {
-        maxRetriesPerRequest: 15,
+      redis = new Redis(redisUrl, {
+        connectTimeout: 2000,
+        commandTimeout: 2000,
+        retryStrategy: () => null,
+        maxRetriesPerRequest: 0,
         tls: parseRedisUrl(redisUrl).tls,
       });
 
       await redis.ping();
-      redis.disconnect();
       return indicator.up();
     } catch (e) {
       this.logger.error(e);
       return indicator.down(`${key} is not available`);
+    } finally {
+      redis?.disconnect();
     }
   }
 }

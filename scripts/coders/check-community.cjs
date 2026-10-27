@@ -25,6 +25,7 @@ function walk(dir) {
 walk("apps/client/src");
 const manifest = JSON.parse(fs.readFileSync("coders.json", "utf8"));
 assert.equal(manifest.version, 2);
+assert.deepEqual(manifest.services, ["postgres", "redis"]);
 assert.deepEqual(manifest.permissions, ["frontend"]);
 assert.ok(
   fs.existsSync(path.join(manifest.frontend.directory, "index.html")),
@@ -43,18 +44,40 @@ function measure(dir) {
     const file = path.join(dir, entry.name);
     assert.ok(!entry.isSymbolicLink(), `Static symlink is forbidden: ${file}`);
     if (entry.isDirectory()) measure(file);
-    else { files++; bytes += fs.statSync(file).size; }
+    else {
+      files++;
+      bytes += fs.statSync(file).size;
+    }
   }
 }
 measure(manifest.frontend.directory);
 assert.ok(files <= 256, `Core frontend file limit exceeded: ${files}/256`);
-assert.ok(bytes <= 10_485_760, `Core frontend size limit exceeded: ${bytes}/10485760`);
+assert.ok(
+  bytes <= 10_485_760,
+  `Core frontend size limit exceeded: ${bytes}/10485760`,
+);
 console.log(`PASS Core frontend limits: ${files} files, ${bytes} bytes`);
 
-const index = fs.readFileSync(path.join(manifest.frontend.directory, "index.html"), "utf8");
-assert.ok(!/<link\s+rel=["']manifest["']/.test(index), "Core forbids web manifests");
-for (const file of fs.readdirSync(path.join(manifest.frontend.directory, "assets"))) {
+const index = fs.readFileSync(
+  path.join(manifest.frontend.directory, "index.html"),
+  "utf8",
+);
+assert.ok(
+  !/<link\s+rel=["']manifest["']/.test(index),
+  "Core forbids web manifests",
+);
+for (const file of fs.readdirSync(
+  path.join(manifest.frontend.directory, "assets"),
+)) {
   if (file.endsWith(".css")) {
-    assert.ok(!/data:font\//.test(fs.readFileSync(path.join(manifest.frontend.directory, "assets", file), "utf8")), "Core requires same-origin font files");
+    assert.ok(
+      !/data:font\//.test(
+        fs.readFileSync(
+          path.join(manifest.frontend.directory, "assets", file),
+          "utf8",
+        ),
+      ),
+      "Core requires same-origin font files",
+    );
   }
 }

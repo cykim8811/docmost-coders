@@ -1,6 +1,7 @@
 {
   "version": 2,
   "name": "Coders 문서",
+  "services": ["postgres", "redis"],
   "frontend": { "directory": "coders/public" },
   "endpoints": {
     "bridge": {

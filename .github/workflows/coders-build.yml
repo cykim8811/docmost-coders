@@ -27,7 +27,23 @@ jobs:
       - run: pnpm --filter @docmost/editor-ext build && pnpm --filter @docmost/base-formula build
       - run: pnpm --filter server build
       - name: Coders authentication and routing tests
-        run: pnpm --filter server test --runInBand --silent integrations/coders common/guards/jwt-auth.guard collaboration/extensions/authentication.extension common/helpers/with-cache
+        run: pnpm --filter server test --runInBand --silent integrations/queue/queue-connection integrations/health/redis.health integrations/coders common/guards/jwt-auth.guard collaboration/extensions/authentication.extension common/helpers/with-cache
+      - name: Redis compatibility under Core limits
+        env:
+          CODERS_MODE: "true"
+          REDIS_URL: redis://127.0.0.1:6379/0
+        run: |
+          docker run -d --name coders-redis-test -p 127.0.0.1:6379:6379 redis:7.4-alpine \
+            redis-server --appendonly yes --appendfsync always --save '' \
+            --maxmemory 64mb --maxmemory-policy noeviction --maxclients 32 \
+            --user default on nopass '~*' '&*' '+@all' '-@admin' '-@dangerous' \
+            '+keys' '+info' '+client|setname' '+client|setinfo' '+client|id' '+client|getname' '+client|unblock'
+          trap 'docker rm -f coders-redis-test' EXIT
+          for attempt in $(seq 1 20); do
+            docker exec coders-redis-test redis-cli PING && break
+            sleep 1
+          done
+          node scripts/coders/redis-smoke.cjs
       - run: pnpm --filter client test
       - name: Verify committed frontend matches source
         run: |
