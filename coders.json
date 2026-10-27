@@ -5,7 +5,7 @@
   "endpoints": {
     "bridge": {
       "path": "/bridge",
-      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"],
+      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"],
       "budget": "30.00"
     },
     "collab": { "path": "/collab", "methods": ["GET"], "budget": "30.00" },
