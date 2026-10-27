@@ -2,10 +2,12 @@ import axios, { AxiosError, AxiosInstance } from "axios";
 import APP_ROUTE from "@/lib/app-route.ts";
 import { isCloud } from "@/lib/config.ts";
 import { codersApiUrl, isCoders, originalApiPath } from "./coders";
+import { codersFetch } from './coders-sdk';
 
 const api: AxiosInstance = axios.create({
   baseURL: "/api",
   withCredentials: true,
+  ...(isCoders() ? { adapter: 'fetch', env: { fetch: codersFetch } } : {}),
 });
 
 api.interceptors.request.use((config) => {
@@ -30,8 +32,8 @@ api.interceptors.response.use(
       "/api/docx-export",
       "/api/bases/export-csv",
     ];
-    if (response.request.responseURL) {
-      const path = originalApiPath(response.request.responseURL);
+    if (response.request?.responseURL || response.config.url) {
+      const path = originalApiPath(response.request?.responseURL || response.config.url);
       if (path && exemptEndpoints.includes(path)) {
         return response;
       }
@@ -43,7 +45,7 @@ api.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401: {
-          const url = originalApiPath(error.request.responseURL);
+          const url = originalApiPath(error.request?.responseURL || error.config?.url || '/');
           if (url === "/api/auth/collab-token") return;
           if (window.location.pathname.startsWith("/share/")) return;
           // public docs probe authed endpoints; reject without the login redirect
@@ -64,7 +66,7 @@ api.interceptors.response.use(
         case 404:
           // Handle not found error
           if (
-            error.response.data.message
+            (error.response.data?.message || '')
               .toLowerCase()
               .includes("workspace not found")
           ) {

@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: AGPL-3.0-only — optional Playwright browser verification. */
 const assert = require("node:assert/strict");
 const { chromium } = require("../../.coders-tools/node_modules/playwright");
-const base = process.env.TEST_UI_URL || "http://docmost-coders-test-proxy:8080";
+const base = process.env.TEST_UI_URL || "http://127.0.0.1:33080";
 const output = process.env.TEST_SCREENSHOT || "/app/.coders-tools/browser.png";
 
 (async () => {
@@ -18,6 +18,28 @@ const output = process.env.TEST_SCREENSHOT || "/app/.coders-tools/browser.png";
     const a = await owner.newPage();
     const b = await member.newPage();
     const errors = [];
+    const recoveryKeys = [];
+    let injectedAccountResponse = false;
+    await a.route("**/api/bridge?**", async (route) => {
+      if (
+        new URL(route.request().url()).searchParams.get("target") !==
+        "/api/users/me"
+      )
+        return route.continue();
+      recoveryKeys.push(route.request().headers()["idempotency-key"]);
+      if (!injectedAccountResponse) {
+        injectedAccountResponse = true;
+        return route.fulfill({
+          status: 402,
+          contentType: "application/json",
+          body: JSON.stringify({
+            error: { code: "insufficient_funds" },
+            account_action_url: base + "/account/projects/test/popup",
+          }),
+        });
+      }
+      return route.continue();
+    });
     let eventConnections = 0;
     for (const page of [a, b]) {
       page.on("pageerror", (error) => errors.push(error.message));
@@ -28,6 +50,17 @@ const output = process.env.TEST_SCREENSHOT || "/app/.coders-tools/browser.png";
           });
       });
     }
+    await a.goto(base + "/#/home");
+    await a.getByRole("button", { name: "같은 요청 확인" }).click();
+    await a.getByRole("link", { name: "Coders 문서", exact: true }).waitFor();
+    assert.ok(recoveryKeys[0], "SDK must assign an idempotency key");
+    assert.equal(
+      recoveryKeys[0],
+      recoveryKeys[1],
+      "Account recovery must reuse the same request key",
+    );
+    console.log('PASS browser: Core SDK 402 recovery preserves the original idempotency key');
+    await a.unroute("**/api/bridge?**");
     const call = async (target, body) => {
       const response = await owner.request.post(
         `${base}/api/bridge?target=${encodeURIComponent("/api" + target)}`,

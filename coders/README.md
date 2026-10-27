@@ -14,6 +14,9 @@ Docmost 0.97.0의 AGPL 코어를 Coders Core v2에서 실행하는 공개 포크
 - 컨테이너는 UID/GID 65534, 읽기 전용 루트, `/tmp` 64 MiB 조건에서 실행합니다.
 - 프론트는 정적 파일과 해시 라우팅을 사용합니다. HTTP는 `/api/bridge`, 협업은
   `/api/collab`, 알림은 `/api/events`로 연결합니다.
+- HTTP API는 Core의 `/_coders/sdk.js`와 Axios fetch 어댑터를 거칩니다.
+  준비 중·계좌 확인·응답 불명 상태에서는 사용자 확인 후 SDK의 동일 요청
+  `retry()`를 사용하며, 원본 키·본문을 유지합니다. JSON과 바이너리 응답을 지원합니다.
 - 서비스 화면에 실행 버전의 소스 링크를 제공합니다.
 
 Enterprise 소스 세 디렉토리는 제거했으며 해당 구현을 번들에 포함하지 않습니다.
@@ -64,7 +67,7 @@ Redis를 활성화한 뒤 `frontend` 권한을 승인합니다. `network`, `tran
 공개 빌드가 완료된 커밋에 대응하는 앱 주소는 다음 형식입니다.
 
 ```text
-https://api.coders.kr/cykim8811/docmost-coders/{40자리_커밋}
+https://core-v2.coders.kr/github/cykim8811/docmost-coders/{40자리_커밋}
 ```
 
 ## 운영 조건과 남은 실환경 확인
@@ -81,6 +84,8 @@ https://api.coders.kr/cykim8811/docmost-coders/{40자리_커밋}
 - Docmost DB 마이그레이션은 시작 시 실행됩니다. 버전 변경 전에 백업하고,
   최신 스키마를 이전 버전 코드로 되돌리지 마십시오.
 - 공개 공유 URL도 Core 리소스 접근 검사를 거칩니다. 로그인 없는 공개 문서 포털은 MVP 범위 밖입니다.
+- 외부 iframe·원격 이미지·Worker가 필요한 기능은 Core CSP에 제한됩니다.
+  MVP의 검증 범위는 기본 문서·공간 권한·첨부파일·실시간 협업입니다.
 - 운영 리소스의 DB·Redis 한도, 메모리·CPU, HTTP 본문 상한, 이미지 압축 크기는 실제 배포에서 검증해야 합니다.
 
 ## 검증 방법
@@ -96,6 +101,13 @@ pnpm --filter server test --runInBand --silent integrations/coders common/guards
 `scripts/coders/dev-proxy.cjs`는 Core의 동작을 흉내내는 **로컬 테스트 전용** 프록시이며
 운영 이미지에 포함되지 않습니다. 브라우저 검증 스크립트는 `.coders-tools`에
 Playwright를 별도 설치한 뒤 실행합니다.
+SDK 브라우저 검증에는 `TEST_SDK_SOURCE`로 로컬 Core SDK 파일을 읽기 전용으로
+제공합니다. Core SDK 구현 자체를 이 저장소에 복사하거나 배포하지 않습니다.
+브라우저 컨테이너는 host 네트워크로 실행하고 `http://127.0.0.1:33080`을 사용합니다.
+
+명시적 `POST /github/{owner}/{repo}/{commit}/_prepare`는
+`core-v2.coders.kr`의 로그인·CSRF 문맥이 필요합니다. 외부 엔드포인트 호출과
+`/_status` 조회는 문서의 `api.coders.kr` API 주소를 사용합니다.
 
 전체 서버 테스트에는 원본의 Nest 테스트 모듈에 의존성 제공자가 없는 스캐폴딩
 테스트 실패가 있습니다. Coders 변경과 직접 관련된 테스트와 실제 DB 통합 테스트를

@@ -10,6 +10,7 @@ import { mantineCssResolver, theme } from "@/theme";
 import { MantineProvider } from "@mantine/core";
 import { BrowserRouter, HashRouter } from "react-router-dom";
 import { isCoders } from '@/lib/coders';
+import { CodersRecoveryPanel } from '@/community/coders-recovery-panel';
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -58,6 +59,7 @@ root.render(
       <ModalsProvider>
         <QueryClientProvider client={queryClient}>
           <Notifications position="bottom-center" limit={3} zIndex={10000} />
+          {isCoders() && <CodersRecoveryPanel />}
           <HelmetProvider>
             <PostHogProvider client={posthog}>
               <AppErrorBoundary>

@@ -35,6 +35,18 @@ function requestOptions(req) {
   };
 }
 const server = http.createServer((req, res) => {
+  if (req.url === "/_coders/sdk.js" && process.env.TEST_SDK_SOURCE) {
+    // Read Core's local SDK for browser tests without copying it into this repo.
+    const source = fs.readFileSync(process.env.TEST_SDK_SOURCE, "utf8");
+    res.setHeader("Content-Type", "text/javascript");
+    res.end(
+      source.replace(
+        "__CODERS_ACCOUNT_ORIGIN__",
+        JSON.stringify("http://" + req.headers.host),
+      ),
+    );
+    return;
+  }
   if (req.url.startsWith("/api/")) {
     const outgoing = http.request(requestOptions(req), (incoming) => {
       res.writeHead(incoming.statusCode, incoming.headers);
@@ -74,6 +86,8 @@ const server = http.createServer((req, res) => {
     "Content-Type",
     mime.lookup(file) || "application/octet-stream",
   );
+  if (file.endsWith('index.html')) res.setHeader('Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-src 'none'; base-uri 'none'; form-action 'self'; object-src 'none'; worker-src 'none'; manifest-src 'none'");
   fs.createReadStream(file).pipe(res);
 });
 server.on("upgrade", (req, socket, head) => {
