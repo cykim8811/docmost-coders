@@ -1,0 +1,1 @@
+import{r as e}from"./rolldown-runtime-XKyaHtl9.js";import{yn as t}from"./vendor-mantine-C8YUzkJi.js";import{l as n}from"./chunk-62JRHF6Z-whE6OGLl.js";import{pn as r}from"./api-client-By5QixOe.js";import{rr as i}from"./index-D83b9zy0.js";var a=e(t());function o(){let{data:e,isLoading:t}=i(),o=n();(0,a.useEffect)(()=>{e&&e?.user&&o(r())},[t,e])}export{o as t};

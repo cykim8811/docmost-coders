@@ -1,11 +1,14 @@
-# Coders 문서 — community adaptation
+# Coders Docs
 
 Docmost의 AGPL 코어를 Coders Core v2에 연결하는 무료 협업 위키 MVP입니다.
+Docmost 기반의 비공식 포크이며 Docmost, Inc.와 제휴 관계가 없습니다.
 Enterprise 소스는 이 브랜치에서 제거했습니다.
 
 - [Coders 배포·개발 안내](coders/README.md)
 - [변경·라이선스 고지](NOTICE.coders.md)
 - [원본 Docmost](https://github.com/docmost/docmost)
+
+## 원본 프로젝트 안내
 
 <div align="center">
     <h1><b>Docmost</b></h1>

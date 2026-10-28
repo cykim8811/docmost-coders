@@ -1,4 +1,7 @@
-# Coders community adaptation
+# Coders Docs
+
+Coders Docs is an independent, unofficial fork of Docmost.
+It is not affiliated with or endorsed by Docmost, Inc.
 
 Based on Docmost 0.97.0, upstream commit
 `6d117f8c52e54e810d5931f153eb2d31c904efb3`.

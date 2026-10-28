@@ -81,7 +81,7 @@ export class CodersIdentityService {
             'Existing database requires an explicit Coders migration',
           );
         const { user, workspace } = await this.signup.initialSetup(
-          { ...profile(userId), workspaceName: 'Coders 문서' },
+          { ...profile(userId), workspaceName: 'Coders Docs' },
           trx,
         );
         await this.users.updateUser(

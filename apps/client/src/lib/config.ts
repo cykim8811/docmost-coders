@@ -11,7 +11,7 @@ declare global {
 }
 
 export function getAppName(): string {
-  return isCoders() ? "Coders 문서" : "Docmost";
+  return "Coders Docs";
 }
 
 export function getAppUrl(): string {

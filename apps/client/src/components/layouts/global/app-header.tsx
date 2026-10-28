@@ -88,7 +88,7 @@ export function AppHeader() {
           <Link to="/home" className={classes.brand} aria-label={getAppName()}>
             <Box hiddenFrom="sm" className={classes.brandIcon}>
               <img
-                src="/icons/favicon-32x32.png"
+                src="/icons/coders-docs.svg"
                 alt={getAppName()}
                 width={22}
                 height={22}

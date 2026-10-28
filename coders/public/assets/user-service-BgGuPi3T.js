@@ -1,0 +1,1 @@
+import{t as e}from"./api-client-By5QixOe.js";async function t(){return(await e.post(`/users/me`)).data}async function n(t){return(await e.post(`/users/update`,t)).data}export{n,t};

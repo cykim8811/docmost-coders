@@ -1,6 +1,8 @@
-# Coders 문서 MVP
+# Coders Docs MVP
 
 Docmost 0.97.0의 AGPL 코어를 Coders Core v2에서 실행하는 공개 포크입니다.
+서비스명은 **Coders Docs**입니다. Docmost 기반의 비공식 포크이며
+Docmost, Inc.와 제휴 관계가 없습니다. 원본 저작권·AGPL 고지와 소스 링크를 유지합니다.
 앱 이용료와 송금 권한은 사용하지 않습니다. 컴퓨팅·DB·Redis 비용은 Coders
 리소스 공동 계좌에서 별도로 발생합니다.
 

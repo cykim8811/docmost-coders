@@ -58,7 +58,7 @@ const output = process.env.TEST_SCREENSHOT || "/app/.coders-tools/browser.png";
     }
     await a.goto(base + "/#/home");
     await a.getByRole("button", { name: "같은 요청 확인" }).click();
-    await a.getByRole("link", { name: "Coders 문서", exact: true }).waitFor();
+    await a.getByRole("link", { name: "Coders Docs", exact: true }).waitFor();
     assert.ok(recoveryKeys[0], "SDK must assign an idempotency key");
     assert.equal(
       recoveryKeys[0],
